@@ -10,18 +10,19 @@ export class CacheService {
     constructor(private storage: Storage) {}
 
     public async set<T>(key: string, value: T): Promise<void> {
-        if (
-            (typeof value !== 'string' && typeof value !== 'number') ||
-            typeof value !== 'boolean'
-        ) {
-            return this.storage.set(key, JSON.stringify(value));
-        } else {
-            return this.storage.set(key, String(value));
-        }
+        const data = {
+            expires: Date.now() + this.CACHE_EXPIRY,
+            data: value
+        };
+        return await this.storage.set(key, data);
     }
 
     public async get<T>(key: string): Promise<any> {
-        return this.storage.get(key);
+        const data = await this.storage.get(key);
+        if (!data || data.expires <= Date.now()) {
+            return null;
+        }
+        return data.data;
     }
 
     public async remove(key: string): Promise<void> {
