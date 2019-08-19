@@ -9,9 +9,13 @@ export class CacheService {
 
     constructor(private storage: Storage) {}
 
-    public async set<T>(key: string, value: T): Promise<void> {
+    public async set<T>(
+        key: string,
+        value: T,
+        cacheTime = this.CACHE_EXPIRY
+    ): Promise<void> {
         const data = {
-            expires: Date.now() + this.CACHE_EXPIRY,
+            expires: Date.now() + cacheTime,
             data: value
         };
         return await this.storage.set(key, data);

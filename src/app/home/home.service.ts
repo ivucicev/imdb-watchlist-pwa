@@ -22,15 +22,25 @@ export class HomeService {
         return data;
     }
 
-    public getMovieOffers(title: string) {
+    public async getMovieOffers(title: string) {
+        const movieOffers = await this.cache.get('offer-' + title);
+        if (movieOffers) {
+            return movieOffers;
+        }
         const url = `${this.API}movie/offers?title=${title}`;
-        const request = this.http.get(url);
-        return request;
+        const data = await this.http.get(url).toPromise();
+        await this.cache.set('offer-' + title, data, 1000 * 60 * 60 * 24 * 30);
+        return data;
     }
 
-    public getProviders() {
+    public async getProviders() {
+        const providers = await this.cache.get('providers');
+        if (providers) {
+            return providers;
+        }
         const url = `${this.API}providers`;
-        const request = this.http.get(url);
-        return request;
+        const data = await this.http.get(url).toPromise();
+        await this.cache.set('providers', data, 1000 * 60 * 60 * 24 * 30);
+        return data;
     }
 }

@@ -54,27 +54,24 @@ export class HomePage implements OnInit {
         this.movieIndex++;
     }
 
-    private getOffers(title, movie) {
-        this.homeService.getMovieOffers(title).subscribe((res: any) => {
-            movie.offers = [];
-            try {
-                for (const offer of res) {
-                    const o = this.providers.find(
-                        prov => offer.provider_id === prov.id
-                    );
-                    if (this.acceptedProviders.indexOf(o.technical_name) > -1) {
-                        movie.offers[o.technical_name] =
-                            offer.urls.standard_web;
-                    }
+    private async getOffers(title, movie) {
+        const res = await this.homeService.getMovieOffers(title);
+        movie.offers = [];
+        try {
+            for (const offer of res) {
+                const o = this.providers.find(
+                    prov => offer.provider_id === prov.id
+                );
+                if (this.acceptedProviders.indexOf(o.technical_name) > -1) {
+                    movie.offers[o.technical_name] = offer.urls.standard_web;
                 }
-            } catch (err) {}
-        });
+            }
+        } catch (err) {}
     }
 
     public async getMovies() {
         const loading = await this.loading.create({
-            message: 'Loading your watchlist!',
-            duration: 2000
+            message: 'Loading your watchlist...'
         });
         await loading.present();
         const movies = await this.homeService.getMovies(this.username);
@@ -83,9 +80,7 @@ export class HomePage implements OnInit {
             this.moviesData.push(movies[key]);
         }
         this.appendMovies();
-        setTimeout(async () => {
-            await this.loading.dismiss();
-        }, 2000);
+        await this.loading.dismiss();
     }
 
     public saveUsername() {
@@ -103,10 +98,8 @@ export class HomePage implements OnInit {
         }
     }
 
-    private getProviders() {
-        this.homeService.getProviders().subscribe((res: any) => {
-            this.providers = res;
-        });
+    private async getProviders() {
+        this.providers = await this.homeService.getProviders();
     }
 
     ngOnInit() {
