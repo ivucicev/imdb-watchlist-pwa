@@ -22,11 +22,9 @@
             <ion-card-subtitle>{{  movie?.starbar?.aggregate }} {{ movie?.title?.metadata?.genres.join(', ') }}
             </ion-card-subtitle>
             <ion-card-subtitle>
-                <ion-chip *ngFor="let star of movie?.title?.credits?.star">
-                    <ion-label>
-                        {{ star.name }}
-                    </ion-label>
-                </ion-chip>
+                <span *ngFor="let star of movie?.title?.credits?.star; let i = index">
+                    {{ star.name }}<span *ngIf="i <  movie?.title?.credits?.star.length - 1">, </span>
+                </span>
             </ion-card-subtitle>
         </ion-card-header>
         <ion-card-content>
