@@ -77,16 +77,15 @@ export class HomePage implements OnInit {
             duration: 2000
         });
         await loading.present();
-        this.homeService.getMovies(this.username).subscribe(async res => {
-            const keys = Object.keys(res);
-            for (const key of keys) {
-                this.moviesData.push(res[key]);
-            }
-            this.appendMovies();
-            setTimeout(async () => {
-                await this.loading.dismiss();
-            }, 2000);
-        });
+        const movies = await this.homeService.getMovies(this.username);
+        const keys = Object.keys(movies);
+        for (const key of keys) {
+            this.moviesData.push(movies[key]);
+        }
+        this.appendMovies();
+        setTimeout(async () => {
+            await this.loading.dismiss();
+        }, 2000);
     }
 
     public saveUsername() {
