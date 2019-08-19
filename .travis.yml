@@ -1,0 +1,26 @@
+#.travis.yml
+
+language: node_js
+node_js:
+  - "9"
+  
+branches:
+  only:
+    - master
+
+before_script:
+  - pushd grapes-cloud
+  - npm install -g firebase-tools
+  - npm install -g @angular/cli
+  - npm install
+
+script:
+  - ng build --prod
+
+after_success:
+  - firebase deploy --only hosting --token 1/SItVLNj187I2Zu_-2dR4SU_FWVgfZwYmhfeuWqIaV1A
+
+notifications:
+  email:
+    on_failure: change
+    on_success: change
