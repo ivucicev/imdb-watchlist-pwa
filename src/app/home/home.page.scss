@@ -1,1 +1,48 @@
+.offer-container {
+    height: 94px;
+    width: 84px;
+    display: inline-block;
+    text-align: center;
+    color: #fff;
+    padding: 8px;
+    margin: 5px;
+    text-decoration: none;
+    border-radius: 5px;
+}
 
+.offer-icon {
+    display: block;
+    height: 64px;
+    width: 64px;
+}
+
+.offer-icon path  {
+    fill: #fff;
+}
+
+.netflix {
+    background-color: #E50914;
+}
+
+.hulu {
+    background-color: #3DBB3D;
+}
+
+.amazon {
+    background-color: #FF9900;
+}
+
+.kodi {
+    background-color: #17B2E7;
+}
+
+.hbogo {
+    color: black;
+}
+
+// .card-content {
+//     margin: 0 auto;
+//     max-width: 400px;
+//     margin-top: 40px;
+//     margin-bottom: 40px;
+// }
