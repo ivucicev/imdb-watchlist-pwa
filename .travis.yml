@@ -9,16 +9,17 @@ branches:
         - master
 
 before_script:
-    - pushd grapes-cloud
     - npm install -g firebase-tools
     - npm install -g @angular/cli
+    - npm install -g ionic
     - npm install
 
 script:
     - ng build --prod
+    - pushd www
 
 after_success:
-    - firebase deploy --only hosting --token 1mg/SItVLNj187I2Zu_-2dR4SU_FWVgfZwYmhfeuWqIaV1A
+    - firebase deploy --only hosting --token 1/ZdLx7X5KOFZ9jlF9RTIMgihktZlDMWDn00NxfoJ9vvs
 
 notifications:
     email:
