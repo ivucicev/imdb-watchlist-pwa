@@ -15,7 +15,7 @@ before_script:
     - npm install
 
 script:
-    - ng build --prod
+    - ionic build --prod
     - pushd www
 
 after_success:
