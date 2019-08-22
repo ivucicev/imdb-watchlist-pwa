@@ -1,4 +1,4 @@
 export const environment = {
-  production: true,
-  API: 'http://localhost:8081/api/'
+    production: true,
+    API: 'https://rocky-tundra-89014.herokuapp.com/api/'
 };
