@@ -40,13 +40,13 @@ export class HomePage implements OnInit {
     }
 
     private appendMovies() {
-        this.movies.push(this.moviesData[this.movieIndex]);
+        // this.movies.push(this.moviesData[this.movieIndex]);
         this.getOffers(
             this.moviesData[this.movieIndex].title.primary.title,
             this.moviesData[this.movieIndex]
         );
         this.movieIndex++;
-        this.movies.push(this.moviesData[this.movieIndex]);
+        // this.movies.push(this.moviesData[this.movieIndex]);
         this.getOffers(
             this.moviesData[this.movieIndex].title.primary.title,
             this.moviesData[this.movieIndex]
@@ -79,6 +79,7 @@ export class HomePage implements OnInit {
         for (const key of keys) {
             this.moviesData.push(movies[key]);
         }
+        this.movies = this.moviesData;
         this.appendMovies();
         await this.loading.dismiss();
     }
