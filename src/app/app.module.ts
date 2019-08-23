@@ -11,6 +11,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { IonicStorageModule } from '@ionic/storage';
 import { ScrollHideDirective } from './scroll-hide.directive';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
     declarations: [AppComponent],
@@ -20,7 +22,10 @@ import { ScrollHideDirective } from './scroll-hide.directive';
         IonicModule.forRoot(),
         IonicStorageModule.forRoot(),
         AppRoutingModule,
-        HttpClientModule
+        HttpClientModule,
+        ServiceWorkerModule.register('./ngsw-worker.js', {
+            enabled: environment.production
+        })
     ],
     providers: [
         StatusBar,
