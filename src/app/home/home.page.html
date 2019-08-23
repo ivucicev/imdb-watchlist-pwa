@@ -3,7 +3,7 @@
         <ion-searchbar (ionChange)="searching($event)"></ion-searchbar>
     </ion-toolbar>
 </ion-header>
-<ion-content (ionScroll)="scrolling($event)" [scrollEvents]="true" #pageContent>
+<ion-content [scrollEvents]="true" #pageContent>
     <ion-refresher slot="fixed" (ionRefresh)="reloadData($event)">
         <ion-refresher-content pullingText="Pull to refresh...">
         </ion-refresher-content>

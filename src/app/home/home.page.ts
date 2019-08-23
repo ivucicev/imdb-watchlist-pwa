@@ -30,7 +30,7 @@ export class HomePage implements OnInit {
 
     public headerScrollConfig: ScrollHideConfig = {
         cssProperty: 'margin-top',
-        maxValue: 44
+        maxValue: 68
     };
 
     @ViewChild(IonInfiniteScroll, { static: true })
@@ -45,12 +45,13 @@ export class HomePage implements OnInit {
         private storage: Storage
     ) {}
 
-    public scrolling(e) {
-        const y = e.detail.scrollTop;
-        if (y > 500) {
-            (this as any).ionHeader.el.style.height -= y;
-            (this as any).ionHeader.el.childNodes[0].style.height -= y;
-        }
+    public searching(e) {
+        const searchValue = e.detail.value.toLowerCase();
+        this.movies = this.moviesData.filter(
+            m =>
+                m.title.primary.title.toLowerCase().indexOf(searchValue) > -1 ||
+                m.title.plot.toLowerCase().indexOf(searchValue) > -1
+        );
     }
 
     public infinite(e) {
