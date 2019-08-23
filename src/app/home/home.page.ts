@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HomeService } from './home.service';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, IonHeader } from '@ionic/angular';
 import { IonInfiniteScroll } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
+import { ScrollHideConfig } from '../scroll-hide.directive';
 
 @Component({
     selector: 'app-home',
@@ -26,13 +28,30 @@ export class HomePage implements OnInit {
     public keys = Object.keys;
     public movieIndex = 0;
 
+    public headerScrollConfig: ScrollHideConfig = {
+        cssProperty: 'margin-top',
+        maxValue: 44
+    };
+
     @ViewChild(IonInfiniteScroll, { static: true })
     public infiniteScroll: IonInfiniteScroll;
 
+    @ViewChild(IonHeader, { static: true })
+    public ionHeader: IonHeader;
+
     constructor(
         private homeService: HomeService,
-        private loading: LoadingController
+        private loading: LoadingController,
+        private storage: Storage
     ) {}
+
+    public scrolling(e) {
+        const y = e.detail.scrollTop;
+        if (y > 500) {
+            (this as any).ionHeader.el.style.height -= y;
+            (this as any).ionHeader.el.childNodes[0].style.height -= y;
+        }
+    }
 
     public infinite(e) {
         this.appendMovies();
@@ -40,13 +59,13 @@ export class HomePage implements OnInit {
     }
 
     private appendMovies() {
-        // this.movies.push(this.moviesData[this.movieIndex]);
+        this.movies.push(this.moviesData[this.movieIndex]);
         this.getOffers(
             this.moviesData[this.movieIndex].title.primary.title,
             this.moviesData[this.movieIndex]
         );
         this.movieIndex++;
-        // this.movies.push(this.moviesData[this.movieIndex]);
+        this.movies.push(this.moviesData[this.movieIndex]);
         this.getOffers(
             this.moviesData[this.movieIndex].title.primary.title,
             this.moviesData[this.movieIndex]
@@ -69,17 +88,27 @@ export class HomePage implements OnInit {
         } catch (err) {}
     }
 
-    public async getMovies() {
+    public async reloadData(e) {
+        this.storage.clear();
+        this.getMovies(true);
+        e.target.complete();
+    }
+
+    public async getMovies(reload = false) {
         const loading = await this.loading.create({
             message: 'Loading your watchlist...'
         });
         await loading.present();
         const movies = await this.homeService.getMovies(this.username);
         const keys = Object.keys(movies);
+        if (reload) {
+            this.movies = [];
+            this.moviesData = [];
+        }
         for (const key of keys) {
             this.moviesData.push(movies[key]);
         }
-        this.movies = this.moviesData;
+        // this.movies = this.moviesData;
         this.appendMovies();
         await this.loading.dismiss();
     }

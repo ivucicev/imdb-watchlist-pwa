@@ -1,4 +1,13 @@
-<ion-content>
+<ion-header [scrollHide]="headerScrollConfig" [scrollContent]="pageContent">
+    <ion-toolbar>
+        <ion-searchbar (ionChange)="searching($event)"></ion-searchbar>
+    </ion-toolbar>
+</ion-header>
+<ion-content (ionScroll)="scrolling($event)" [scrollEvents]="true" #pageContent>
+    <ion-refresher slot="fixed" (ionRefresh)="reloadData($event)">
+        <ion-refresher-content pullingText="Pull to refresh...">
+        </ion-refresher-content>
+    </ion-refresher>
     <ion-card *ngIf="isInitial" class="card-content">
         <img src="assets/imdb.png" />
         <ion-card-content>
@@ -102,8 +111,12 @@
             </a>
         </ion-card-content>
     </ion-card>
-    <ion-infinite-scroll (ionInfinite)="infinite($event)" threshold="100px">
+    <ion-infinite-scroll (ionInfinite)="infinite($event)">
         <ion-infinite-scroll-content>
+        </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+    <ion-infinite-scroll (ionInfinite)="infinite($event)">
+        <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data…">
         </ion-infinite-scroll-content>
     </ion-infinite-scroll>
 </ion-content>
