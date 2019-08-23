@@ -1,8 +1,8 @@
-<ion-header [scrollHide]="headerScrollConfig" [scrollContent]="pageContent">
+<!-- <ion-header [scrollHide]="headerScrollConfig" [scrollContent]="pageContent" *ngIf="!isInitial">
     <ion-toolbar>
         <ion-searchbar (ionChange)="searching($event)"></ion-searchbar>
     </ion-toolbar>
-</ion-header>
+</ion-header> -->
 <ion-content [scrollEvents]="true" #pageContent>
     <ion-refresher slot="fixed" (ionRefresh)="reloadData($event)">
         <ion-refresher-content pullingText="Pull to refresh...">
@@ -113,10 +113,6 @@
     </ion-card>
     <ion-infinite-scroll (ionInfinite)="infinite($event)">
         <ion-infinite-scroll-content>
-        </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
-    <ion-infinite-scroll (ionInfinite)="infinite($event)">
-        <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data…">
         </ion-infinite-scroll-content>
     </ion-infinite-scroll>
 </ion-content>

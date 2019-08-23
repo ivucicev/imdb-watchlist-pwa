@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HomeService } from './home.service';
-import { LoadingController, IonHeader } from '@ionic/angular';
+import { LoadingController, IonHeader, IonRefresher } from '@ionic/angular';
 import { IonInfiniteScroll } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { ScrollHideConfig } from '../scroll-hide.directive';
@@ -35,6 +35,9 @@ export class HomePage implements OnInit {
 
     @ViewChild(IonInfiniteScroll, { static: true })
     public infiniteScroll: IonInfiniteScroll;
+
+    @ViewChild(IonRefresher, { static: true })
+    public ionRefresher: IonRefresher;
 
     @ViewChild(IonHeader, { static: true })
     public ionHeader: IonHeader;
@@ -100,23 +103,38 @@ export class HomePage implements OnInit {
             message: 'Loading your watchlist...'
         });
         await loading.present();
-        const movies = await this.homeService.getMovies(this.username);
-        const keys = Object.keys(movies);
-        if (reload) {
-            this.movies = [];
-            this.moviesData = [];
+        try {
+            const movies = await this.homeService.getMovies(this.username);
+            const keys = Object.keys(movies);
+            if (reload) {
+                this.movies = [];
+                this.moviesData = [];
+            }
+            for (const key of keys) {
+                this.moviesData.push(movies[key]);
+            }
+            this.isInitial = false;
+            this.appendMovies();
+            await this.loading.dismiss();
+            if (
+                !this.isInitial &&
+                this.ionRefresher.disabled &&
+                this.infiniteScroll.disabled
+            ) {
+                this.ionRefresher.disabled = false;
+                this.infiniteScroll.disabled = false;
+            }
+        } catch (err) {
+            localStorage.clear();
+            this.isInitial = true;
+            this.username = null;
+            alert('User does not exist, or watchlist is not public!');
+            await this.loading.dismiss();
         }
-        for (const key of keys) {
-            this.moviesData.push(movies[key]);
-        }
-        // this.movies = this.moviesData;
-        this.appendMovies();
-        await this.loading.dismiss();
     }
 
     public saveUsername() {
         localStorage.setItem(this.IMDB_USER_KEY, this.username);
-        this.isInitial = false;
         this.getMovies();
     }
 
@@ -136,5 +154,7 @@ export class HomePage implements OnInit {
     ngOnInit() {
         this.checkIfUsernameExists();
         this.getProviders();
+        this.infiniteScroll.disabled = true;
+        this.ionRefresher.disabled = true;
     }
 }
